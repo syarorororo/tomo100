@@ -8,8 +8,9 @@ using TMPro;
 public class PlayerTalkController : MonoBehaviour
 {
     [SerializeField]
-    GameObject TalkWindow;
+    public GameObject TalkWindow;
     [SerializeField]
+    public MonoBehaviour[] ScriptsToDisable;
     private TextMeshProMode TextmeshProMode;
     private TextMeshPro _textMeshPro;
     private TextMeshProUGUI textMeshProUGUI;
@@ -24,13 +25,23 @@ public class PlayerTalkController : MonoBehaviour
         TalkWindow.SetActive(false);
 
     }
-    public void OnTalk(InputValue value)
+    public void OnTalk(InputAction.CallbackContext context)
     {
-        if (isTalk)
+        if(context.performed && isTalk)
         {
-            TalkWindow.SetActive(true);
-            textMeshProUGUI=GetComponent<TextMeshProUGUI>();
-            textMeshProUGUI.SetText("aaaaaaaaaa");
+            
+                TalkWindow.SetActive(true);
+                Debug.Log("会話UIを表示");
+            if(TalkWindow.activeSelf )
+            {
+                Debug.Log("会話開始。会話以外のプログラムを停止");
+                SetScriptsEnabled(false);
+            }
+            else
+            {
+                Debug.Log("会話終了");
+                SetScriptsEnabled(true);
+            }
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -42,15 +53,25 @@ public class PlayerTalkController : MonoBehaviour
              Debug.Log("会話可能です");
         }
     }
-    private void OnCollisionEnter(Collision collision)
+    public void SetScriptsEnabled(bool enabled)
+    {
+        foreach (var script in ScriptsToDisable)
+        {
+            if(script != null)
+            {
+                script.enabled = enabled;
+            }
+        }
+    }
+    /*private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.gameObject.name);
         if (collision.gameObject.tag =="TalkNPC")
         {
-            Debug.Log("会話可能です");
+            Debug.Log("会話可能ですzo");
         }
         
-    }
+    }*/
     // Update is called once per frame
     void Update()
     {
