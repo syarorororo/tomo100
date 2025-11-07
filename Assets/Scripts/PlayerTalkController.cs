@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using TMPro;
 public class PlayerTalkController : MonoBehaviour
 {
+    [SerializeField]
+    GameObject camera;
     int x = 0;//‰ï˜b—Ê
     [SerializeField]
     Text_Controler T_con;

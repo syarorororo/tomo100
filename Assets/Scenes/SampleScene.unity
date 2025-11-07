@@ -341,11 +341,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ba0592ebcd07444be70727750b596b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   T_con: {fileID: 0}
   data: {fileID: 0}
   TalkWindow: {fileID: 650930379}
   ScriptsToDisable:
   - {fileID: 1925147587}
+  IsPush: 0
 --- !u!65 &227554831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -781,17 +783,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 650930379}
   m_CullTransparentMesh: 1
+--- !u!1 &780981099 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1288878722432503877, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
+  m_PrefabInstance: {fileID: 1298025557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &780981101 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4236610673206517209, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
   m_PrefabInstance: {fileID: 1298025557}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_GameObject: {fileID: 780981099}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9de0f9508524bda44906a53c3ea8191e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Text_Controler
+--- !u!114 &780981103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780981099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7472d6a21f915cc4c81f14b7f191d71b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  A: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,7 +966,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1925147592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1259361076
@@ -1066,10 +1087,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 65e8c2287c632d6438c0ebe5dcd2977d, type: 2}
+    - target: {fileID: 3911677736245262390, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4236610673206517209, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
       propertyPath: text
       value: 
       objectReference: {fileID: 1689214179}
+    - target: {fileID: 4236610673206517209, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8473303446286570454, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -1114,7 +1143,10 @@ PrefabInstance:
     - {fileID: 5749177788445014840, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1288878722432503877, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 780981103}
   m_SourcePrefab: {fileID: 100100000, guid: f735c42660dbc95458e31c9985a97cd5, type: 3}
 --- !u!1 &1565156830
 GameObject:
@@ -1617,13 +1649,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925147586}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 1, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 227554829}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 862755876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &1925147593
 CharacterController:
@@ -1719,7 +1751,6 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 862755876}
-  - {fileID: 1925147592}
   - {fileID: 1585853835}
   - {fileID: 199602171}
   - {fileID: 633939008}
