@@ -41,12 +41,12 @@ public class PlayerController : MonoBehaviour
         if (isSprint)
         {
             P_speed = 8.0f;
-            Debug.Log("走りに変更");
+           // Debug.Log("走りに変更");
         }
         else
         {
             P_speed = 5.0f;
-            Debug.Log("歩きに変更");
+           // Debug.Log("歩きに変更");
         }
         var moveVelocity = new Vector3(inputMove.x * P_speed, VerticalVelocity, inputMove.y * P_speed);
         var moveDelta =moveVelocity  *Time .deltaTime;  

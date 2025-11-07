@@ -1,12 +1,14 @@
-using Unity.VisualScripting;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using System;
 using TMPro;
 public class PlayerTalkController : MonoBehaviour
 {
+    int x = 0;//会話量
+    [SerializeField]
+    Text_Controler T_con;
+    [SerializeField] 
+    Character_Text_Data data;
     [SerializeField]
     public GameObject TalkWindow;
     [SerializeField]
@@ -17,31 +19,29 @@ public class PlayerTalkController : MonoBehaviour
     private TMP_Text TMP_Text;
 
     bool isTalk = false;
+    public bool IsPush = false;
     
     public enum TextMeshProMode{TextMeshPro,TextMeshProUGUI,TMP_Text}
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         TalkWindow.SetActive(false);
-
+        StartCoroutine(TalkCol());
     }
     public void OnTalk(InputAction.CallbackContext context)
     {
         if(context.performed && isTalk)
         {
             
-                TalkWindow.SetActive(true);
-                Debug.Log("会話UIを表示");
-            if(TalkWindow.activeSelf )
-            {
-                Debug.Log("会話開始。会話以外のプログラムを停止");
-                SetScriptsEnabled(false);
-            }
-            else
-            {
-                Debug.Log("会話終了");
-                SetScriptsEnabled(true);
-            }
+            TalkWindow.SetActive(true);
+            Debug.Log("会話UIを表示");  
+            
+            Debug.Log("会話開始。会話以外のプログラムを停止");
+            SetScriptsEnabled(false);
+            StartCoroutine(Whilecol());              
+            Debug.Log("会話終了");
+            
+            
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -63,18 +63,35 @@ public class PlayerTalkController : MonoBehaviour
             }
         }
     }
-    /*private void OnCollisionEnter(Collision collision)
+
+    IEnumerator Whilecol()
     {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.tag =="TalkNPC")
+        yield return StartCoroutine(TalkCol());
+        SetScriptsEnabled(true);
+        TalkWindow.SetActive(false);
+    }
+   IEnumerator TalkCol()
+    {
+
+        yield return StartCoroutine(T_con.textcol(data.Data[0].Text));
+        IsPush = false ;
+        yield return new WaitUntil(() => IsPush);
+        yield return new WaitForSeconds(2f);
+        /*     
+          for(int i = 0;i<x;i++)
+          {
+             yield return StartCoroutine(T_con.textcol(data.Data[i].Text));
+             IsPush=false;
+             yield return new WaitUntil(() => Ispush);
+             IsPush=false;
+          } */
+        yield break;
+    }
+    private void Update()
+    {
+         if(Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("会話可能ですzo");
+            IsPush = true;
         }
-        
-    }*/
-    // Update is called once per frame
-    void Update()
-    {
-      
     }
 }
