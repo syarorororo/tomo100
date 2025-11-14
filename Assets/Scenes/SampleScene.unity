@@ -347,9 +347,9 @@ MonoBehaviour:
   P_sele: 0
   T_con: {fileID: 1664262677}
   data:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 65e8c2287c632d6438c0ebe5dcd2977d, type: 2}
+  - {fileID: 11400000, guid: dab37cdfe9720f04b9147b4150987e60, type: 2}
+  - {fileID: 11400000, guid: 6e1fc3ba24169b04a91094e544911507, type: 2}
   TalkWindow: {fileID: 650930379}
   SelectPanel: {fileID: 1432058979}
   ScriptsToDisable:
@@ -1399,7 +1399,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000022888, y: 0.000024557}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -1033.6624, y: -220.3209}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1432058981
