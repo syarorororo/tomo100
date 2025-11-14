@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61d1bfe125997cf4698918690733349e, type: 3}
-  m_Name: NewCharacter_Text_Data
-  m_EditorClassIdentifier: Assembly-CSharp::Character_Text_Data
-  Data:
-  - Text: Fuckyou
-    Side: 1
-  CharacterName: "\u3042\u3044\u3046\u3048\u304A"
+  m_Name: Loute!
+  m_EditorClassIdentifier: 
+  Data: []
+  CharacterName: 
   CharacterImage: {fileID: 0}

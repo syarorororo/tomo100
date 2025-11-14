@@ -2,18 +2,21 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using Mono.Cecil.Cil;
 public class PlayerTalkController : MonoBehaviour
 {
     [SerializeField]
     GameObject camera;
-    int x = 0;//会話量
+    public int x = 0;//会話量
+    public int P_sele;//プレイヤーの選択肢
     [SerializeField]
     Text_Controler T_con;
     [SerializeField] 
-    Character_Text_Data data;
+    Character_Text_Data[] data;
     [SerializeField]
     public GameObject TalkWindow;
     [SerializeField]
+    public GameObject SelectPanel;
     public MonoBehaviour[] ScriptsToDisable;
     private TextMeshProMode TextmeshProMode;
     private TextMeshPro _textMeshPro;
@@ -28,11 +31,12 @@ public class PlayerTalkController : MonoBehaviour
     void Start()
     {
         TalkWindow.SetActive(false);
-        StartCoroutine(TalkCol());
+        SelectPanel.SetActive(false);
+      
     }
     public void OnTalk(InputAction.CallbackContext context)
     {
-        if(context.performed && isTalk)
+        if(context.started && isTalk)
         {
             
             TalkWindow.SetActive(true);
@@ -45,6 +49,7 @@ public class PlayerTalkController : MonoBehaviour
             
             
         }
+
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -74,20 +79,60 @@ public class PlayerTalkController : MonoBehaviour
     }
    IEnumerator TalkCol()
     {
-
+        /*
         yield return StartCoroutine(T_con.textcol(data.Data[0].Text));
         IsPush = false ;
         yield return new WaitUntil(() => IsPush);
-        yield return new WaitForSeconds(2f);
-        /*     
-          for(int i = 0;i<x;i++)
+        yield return new WaitForSeconds(1f);*/
+
+        x = data[0].Data.Length;
+        Debug.Log("Start of Loop");
+        for(int i = 0;i<x;i++)
           {
-             yield return StartCoroutine(T_con.textcol(data.Data[i].Text));
+            Debug.Log("Text for Loop");
+             yield return StartCoroutine(T_con.textcol(data[0].Data[i].Text));
              IsPush=false;
-             yield return new WaitUntil(() => Ispush);
+            Debug.Log($"x={i}");
+             yield return new WaitUntil(() => IsPush);
              IsPush=false;
-          } */
+          } 
+        yield return StartCoroutine(SelectCol());
         yield break;
+    }
+    IEnumerator SelectTalkCol(int a)
+    {
+        
+        x=data[a].Data.Length;  
+        for (int i = 0; i < x; i++)
+        {
+            Debug.Log("Text for Loop");
+            yield return StartCoroutine(T_con.textcol(data[a].Data[i].Text));
+            IsPush = false;
+            Debug.Log($"x={i}");
+            yield return new WaitUntil(() => IsPush);
+            IsPush = false;
+        }
+        
+        yield break;
+    }
+    IEnumerator SelectCol()
+    {
+       SelectPanel.SetActive(true);
+        yield return new WaitUntil(() => IsPush);
+        SelectPanel.SetActive(false);
+        switch (P_sele)
+        {
+            case 0://はい
+                yield return StartCoroutine(SelectTalkCol(1));
+               
+                break;
+            case 1://いいえ
+                yield return StartCoroutine(SelectTalkCol(2));
+                
+                break;
+        }
+    yield break ;
+        
     }
     private void Update()
     {
@@ -95,5 +140,11 @@ public class PlayerTalkController : MonoBehaviour
         {
             IsPush = true;
         }
+    }
+    
+    public void OnClick(int v)
+    {
+        P_sele = v;
+        IsPush = true;
     }
 }
