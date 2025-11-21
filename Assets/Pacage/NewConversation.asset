@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: NewConversation
   m_EditorClassIdentifier: Assembly-CSharp::Conversation
   conversationName: 
-  branches: []
+  branches:
+  - dialogues: []
+    nextBranchIndices: 
+  - dialogues: []
+    nextBranchIndices: 
