@@ -342,19 +342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ba0592ebcd07444be70727750b596b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 330585543}
-  x: 3
-  P_sele: 0
-  T_con: {fileID: 1664262677}
-  data:
-  - {fileID: 11400000, guid: 65e8c2287c632d6438c0ebe5dcd2977d, type: 2}
-  - {fileID: 11400000, guid: dab37cdfe9720f04b9147b4150987e60, type: 2}
-  - {fileID: 11400000, guid: 6e1fc3ba24169b04a91094e544911507, type: 2}
-  TalkWindow: {fileID: 650930379}
-  SelectPanel: {fileID: 1432058979}
-  ScriptsToDisable:
-  - {fileID: 1925147587}
   IsPush: 0
+  data: {fileID: 0}
 --- !u!65 &227554831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1723,6 +1712,7 @@ GameObject:
   - component: {fileID: 1664262679}
   - component: {fileID: 1664262678}
   - component: {fileID: 1664262677}
+  - component: {fileID: 1664262680}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1772,6 +1762,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1664262680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664262676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ba0592ebcd07444be70727750b596b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsPush: 0
+  data: {fileID: 11400000, guid: 3d72f0fb0dcd1de45a4098f804492340, type: 2}
 --- !u!114 &1689214179 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6191600641723738988, guid: 81772c7b52913e844b2fd7fe957ff993, type: 3}

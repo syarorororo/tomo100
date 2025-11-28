@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Switch_Text_Data
+  m_EditorClassIdentifier: Assembly-CSharp::Switch
+  Mode: 0
+  Data: {fileID: 11400000, guid: 41831fe0a86956d48bc35459437adaa1, type: 2}
+  Side: 0
+  s: {fileID: 0}
+  Switch_Data:
+  - Switched_Title: a
+    Switched_Data:
+    - {fileID: 11400000, guid: 2b179909c93b51e468975afcdd84d879, type: 2}
+    - {fileID: 11400000, guid: 2b179909c93b51e468975afcdd84d879, type: 2}
+  - Switched_Title: a
+    Switched_Data: []
