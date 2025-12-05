@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - TalkNPC
+  - Chair
   layers:
   - Default
   - TransparentFX

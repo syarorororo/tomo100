@@ -1,28 +1,41 @@
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
-using System.Collections;
-public class Chairsgame_base : MonoBehaviour
+
+public class ChairGame_Player : MonoBehaviour
 {
     public GameObject CenterObj;
     public float rote_sp;
-
     private GameObject nearobj;
+    bool Check;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         nearobj = searchTag(gameObject, "Chair");
-    }
 
+       
+    }
+    public void ClickMouse(bool i)
+    {
+        if(i == true)
+        {
+           if(Input.GetKey(KeyCode.Space))
+            {
+                Check = true;
+            }
+        }
+        else
+        {
+           Check = false;
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
-        MovePos(false);
-    }
-   public void MovePos(bool i)
-    {
-        if (i)
+        if(Check)
         {
             transform.LookAt(nearobj.transform);
-            transform.Translate(Vector3.forward* Time.deltaTime);   
+            transform.Translate(Vector3.forward * Time.deltaTime);
         }
         else
         {
@@ -30,20 +43,20 @@ public class Chairsgame_base : MonoBehaviour
         }
     }
     
-    GameObject searchTag(GameObject nowobj,string tagname)
+    GameObject searchTag(GameObject nowobj, string tagname)
     {
         float tmpDis = 0;
         float nearDis = 0;
 
         GameObject targetobj = null;
-        foreach(GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
+        foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
         {
-            tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);  
-            
-            if(nearDis == 0||nearDis >  tmpDis)
+            tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
+
+            if (nearDis == 0 || nearDis > tmpDis)
             {
                 nearDis = tmpDis;
-                targetobj = obs; 
+                targetobj = obs;
             }
         }
         return targetobj;
