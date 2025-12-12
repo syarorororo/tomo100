@@ -10,9 +10,9 @@ public class ChairGame_Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        nearobj = searchTag(gameObject, "Chair");
-
        
+
+        
     }
     public void ClickMouse(bool i)
     {
@@ -20,6 +20,7 @@ public class ChairGame_Player : MonoBehaviour
         {
            if(Input.GetKey(KeyCode.Space))
             {
+                nearobj = searchTag(gameObject, "Chair");
                 Check = true;
             }
         }
@@ -32,7 +33,8 @@ public class ChairGame_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Check)
+        ClickMouse(true);
+        if (Check)
         {
             transform.LookAt(nearobj.transform);
             transform.Translate(Vector3.forward * Time.deltaTime);

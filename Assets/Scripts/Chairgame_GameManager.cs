@@ -2,9 +2,14 @@ using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Chairgame_GameManager : MonoBehaviour
 {
+    ChairGame_Player player;
+    Chairsgame_base chairsgame_Base;
+    public AudioSource audiosource;
+    private float randomPlayTIme;
     public Vector3 centerPoint = Vector3.zero;
     [SerializeField]
     private GameObject CreateObj;
@@ -14,26 +19,40 @@ public class Chairgame_GameManager : MonoBehaviour
     public float radius = 3.0f;
     [SerializeField]
     public float repeat = 2f;
+    [SerializeField]
+    Text TimerText;
+    float limitTime = 3;
+    [SerializeField]
+    public GameObject Panel;
     Chairgame_Music C_Music;
     Chairsgame_base C_Base;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        randomPlayTIme = Random.Range(5f, 30f);
         centerPoint = transform.position;
         StartCoroutine(CreateChair());
         C_Music = GetComponent<Chairgame_Music>();
         C_Base = GetComponent<Chairsgame_base>();
-        
+        StartGame();
     }
 
     // Update is called once per frame
     void Update()
     {
+        limitTime -= Time.deltaTime;
 
+        if (limitTime < 0)
+        {
+            limitTime = 0;
+        }
+
+        TimerText.text = limitTime.ToString("F0");
     }
 
     IEnumerator CreateChair()
     {
+        Debug.Log("CreateChair‚ª“Ç‚Ýž‚Ü‚ê‚Ü‚µ‚½");
         var oneCycle = 2.0f*Mathf.PI;
         for (var i = 0; i < CreateCount; i++)
         {
@@ -61,12 +80,43 @@ public class Chairgame_GameManager : MonoBehaviour
 
     IEnumerator PlayGame()
     {
+       
+        Debug.Log("PlayGame‚ª“Ç‚Ýž‚Ü‚ê‚Ü‚µ‚½");
        if(CreateCount != 0)
         {
-          C_Music.AudioPlay();
+          AudioPlay();
         }
         CreateCount -= 1;
 
         yield break;
+    }
+    void StartGame()
+    {
+        StartCoroutine(CountDown());
+    }
+    IEnumerator CountDown()
+    {
+        Debug.Log("CountDown‚ª“Ç‚Ýž‚Ü‚ê‚Ü‚µ‚½");
+        limitTime -= Time.deltaTime;
+
+        if (limitTime < 0)
+        {
+            limitTime = 0;
+           
+        }
+        TimerText.text = limitTime.ToString("F0");  
+        yield return  StartCoroutine(PlayGame());   
+    }
+    public void AudioPlay()
+    {
+        audiosource.Play();
+        Invoke("StopMusic", randomPlayTIme);
+
+    }
+    void StopMusic()
+    {
+        audiosource.Stop();
+        chairsgame_Base.MovePos(true);
+        player.ClickMouse(true);
     }
 }
