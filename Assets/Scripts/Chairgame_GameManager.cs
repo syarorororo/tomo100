@@ -80,7 +80,7 @@ public class Chairgame_GameManager : MonoBehaviour
 
     IEnumerator PlayGame()
     {
-       
+       Panel.SetActive(false);
         Debug.Log("PlayGame‚ª“Ç‚İ‚Ü‚ê‚Ü‚µ‚½");
        if(CreateCount != 0)
         {

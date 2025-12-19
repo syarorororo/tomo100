@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 public class Chairsgame_base : MonoBehaviour
 {
+    
     public GameObject CenterObj;
     public float rote_sp;
 
@@ -10,6 +11,7 @@ public class Chairsgame_base : MonoBehaviour
     void Start()
     {
         nearobj = searchTag(gameObject, "Chair");
+
     }
 
     // Update is called once per frame
