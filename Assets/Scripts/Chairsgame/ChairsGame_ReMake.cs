@@ -11,18 +11,19 @@ public class ChairsGame_ReMake : MonoBehaviour
     ・椅子までの移動　済
     ・回転（音楽なってるとき）済
     ・椅子を取られた時の対象の変更
-    ・椅子を少なくしてゲームのリスタート
-  　  一連をコルーチン操作でやってみる
+    ・椅子を少なくしてゲームのリスタート 済
+  　  一連をコルーチン操作でやってみる　済
     ・リザルト
     次やること
-    ・ゲームマネージャーの参照をとる
-    ・そのオブジェクトからこのスクリプトを参照
-    ・この中のセンターオブジェクトを参照
+    ・キャラの情報追加
+    ・リザルトを出す
+    ・椅子の判定追加
      */
+    public bool OK = false; 
     public bool St=false;
-   // public bool end=false;
+    public bool end=false;
     ChairGame_Player player;
-    Chairsgame_base enemy;
+   Kouya.Chairsgame_base enemy;
     public AudioSource audiosource;
     private float randomPlayTIme;//音楽再生時間
     private float randomWaitTIme;//待機時間
@@ -32,7 +33,7 @@ public class ChairsGame_ReMake : MonoBehaviour
     [SerializeField]
     private GameObject CreateCharaObj;//生成するキャラオブジェクト
     [SerializeField]
-    private GameObject centobj;
+    public GameObject centobj; //円の中心になるオブジェクト
     [SerializeField]
     public int CreateCount = 7;//椅子を生成する数
     [SerializeField]
@@ -49,12 +50,15 @@ public class ChairsGame_ReMake : MonoBehaviour
     Text ResultText;
     float limitTime = 3;
     [SerializeField]
+    public GameObject ExpPanel;
+    [SerializeField]
     public GameObject Panel;
     [SerializeField]
     public GameObject ResultPanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("ChairsGame_ReMakeが読み込まれました。");
         randomPlayTIme = Random.Range(5f, 30f);//音楽を流す時間設定
         randomWaitTIme = Random.Range(0f, 2f);//待機時間設定
         centerPoint = transform.position;
@@ -68,28 +72,55 @@ public class ChairsGame_ReMake : MonoBehaviour
     {
         
     }
+     public void P_Know()
+    {
+        OK = true;
+        Debug.Log("説明画面が押されました");
+    }
     //--------------------ゲームをまとめるコルーチン------------------
     IEnumerator GameMaster()
     {
         Debug.Log("GameMasterが読み込まれました");
-       // while(CreateCount<1)
-       // {
-         Debug.Log("ゲームループ開始");
-        yield return StartCoroutine(CreateChair());
-        yield return StartCoroutine(CharaCreate());
-        yield return StartCoroutine(StartGame());
-        yield return StartCoroutine(MusicController());
-           //CreateCount -= 1;
-          //CreateCharaCount -= 1;
-      // }
-        //yield return new WaitUntil(() => end);
+       // yield return StartCoroutine(ExpGame());
+        while (CreateCount > 1)
+        {
+            Debug.Log("ゲームループ開始");
+            yield return StartCoroutine(CreateChair());
+            yield return StartCoroutine(CharaCreate());
+            yield return StartCoroutine(StartGame());
+            yield return StartCoroutine(MusicController());
+            yield return StartCoroutine(ResetGame());
+             CreateCount -= 1;
+             CreateCharaCount -= 1;
+        }
+        yield return new WaitUntil(() => end);
         yield return StartCoroutine(EndedGame());
         Debug.Log("ゲームループ終了");           
         yield break;
     }
+    //--------------------ゲーム説明画面のコルーチン------------------
+    IEnumerator ExpGame()
+    {
+        ExpPanel.SetActive(true);
+        yield return new WaitUntil(() => OK);
+        OK = false;
+        ExpPanel.SetActive(false);  
+        yield break ;
+    }
+    //--------------------ゲームリセットのコルーチン------------------
+    IEnumerator ResetGame()
+    {
+        Transform Parent_t = centobj.transform;
+        for(int i = Parent_t.childCount -1;i>=0;i--)
+        {
+            Destroy(Parent_t.GetChild(i).gameObject);
+        }
+        yield break ;
+    }
     //--------------------ゲーム終了のコルーチン----------------------
     IEnumerator EndedGame()
     {
+        Debug.Log("EndedGameが読み込まれました");
         ResultPanel.SetActive(true);
         ResultText.text = "Finish!!";
         yield return new WaitForSeconds(2f);
@@ -101,8 +132,15 @@ public class ChairsGame_ReMake : MonoBehaviour
     //--------------------ゲームの開始前のコルーチン------------------
     IEnumerator StartGame()
     {
-        limitTime -= Time.deltaTime;
-        TimerText.text = limitTime.ToString("F0");
+        Debug.Log("StartGameが読み込まれました");
+   
+        Debug.Log("ループ中");
+        
+        while(limitTime>0)
+        {
+            limitTime -= Time.deltaTime;
+        }
+        // TimerText.text = limitTime.ToString("F0");
         if (limitTime < 0)
         {
             limitTime = 0;
@@ -116,20 +154,22 @@ public class ChairsGame_ReMake : MonoBehaviour
     //--------------------音楽を流して止めるコルーチン----------------
     IEnumerator MusicController()
     {
-        audiosource.Play();
+        Debug.Log("MusicControllerが読み込まれました");
+        //audiosource.Play();
         Debug.Log("音楽が流れ始めました。");
         yield return new WaitForSeconds(randomPlayTIme);
-        audiosource.Stop();
+        //audiosource.Stop();
         Debug.Log("音楽が止まりました。");
-        player.ClickMouse(true);
+       // player.ClickMouse(true);
         yield return new WaitForSeconds(randomWaitTIme);
-        enemy.MovePos(true);
+       // enemy.MovePos(true);
         yield break;
     }
     //--------------------椅子を円形に生成するコルーチン--------------
     IEnumerator CreateChair()
     {
         Debug.Log("CreateChairが読み込まれました");
+        Debug.Log("椅子の数:" + CreateCount);
         var oneCycle = 2.0f * Mathf.PI;
         if(CreateCount>=1)
         {
@@ -163,7 +203,8 @@ public class ChairsGame_ReMake : MonoBehaviour
         }
         else
         {
-           StartCoroutine(EndedGame());//ゲーム終了
+            end = true;
+          // StartCoroutine(EndedGame());//ゲーム終了
         }
             yield break;
     }
@@ -171,6 +212,7 @@ public class ChairsGame_ReMake : MonoBehaviour
     IEnumerator CharaCreate()
     {
         Debug.Log("CharaCreateが読み込まれました");
+        Debug.Log("キャラの数:" + CreateCharaCount);
         var oneCycle = 2.0f * Mathf.PI;
         if (CreateCharaCount >= 2)
         {
@@ -201,7 +243,8 @@ public class ChairsGame_ReMake : MonoBehaviour
         }
         else
         {
-            StartCoroutine(EndedGame());//ゲーム終了
+            end = true;
+           // StartCoroutine(EndedGame());//ゲーム終了
         }
         yield break;
        

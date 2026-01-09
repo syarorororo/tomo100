@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 public class Chairgame_Music : MonoBehaviour
 {
     ChairGame_Player player;
-    Chairsgame_base chairsgame_Base;
+    Kouya.Chairsgame_base chairsgame_Base;
     public AudioSource audiosource;
     private float randomPlayTIme;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

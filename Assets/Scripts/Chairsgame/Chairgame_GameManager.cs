@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Chairgame_GameManager : MonoBehaviour
 {
     ChairGame_Player player;
-    Chairsgame_base chairsgame_Base;
+    Kouya.Chairsgame_base chairsgame_Base;
     public AudioSource audiosource;
     private float randomPlayTIme;
     public Vector3 centerPoint = Vector3.zero;
@@ -25,7 +25,7 @@ public class Chairgame_GameManager : MonoBehaviour
     [SerializeField]
     public GameObject Panel;
     Chairgame_Music C_Music;
-    Chairsgame_base C_Base;
+    Kouya.Chairsgame_base C_Base;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,7 +33,7 @@ public class Chairgame_GameManager : MonoBehaviour
         centerPoint = transform.position;
         StartCoroutine(CreateChair());
         C_Music = GetComponent<Chairgame_Music>();
-        C_Base = GetComponent<Chairsgame_base>();
+        C_Base = GetComponent<Kouya.Chairsgame_base>();
         StartGame();
     }
 
