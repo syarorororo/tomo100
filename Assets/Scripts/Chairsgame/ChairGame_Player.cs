@@ -7,6 +7,7 @@ public class ChairGame_Player : MonoBehaviour
     public float rote_sp;
     private GameObject nearobj;
     bool Check;
+    bool sp;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,8 +37,12 @@ public class ChairGame_Player : MonoBehaviour
         ClickMouse(true);
         if (Check)
         {
-            transform.LookAt(nearobj.transform);
-            transform.Translate(Vector3.forward * Time.deltaTime);
+            if (sp == false)
+            {
+                transform.LookAt(nearobj.transform);
+                transform.Translate(Vector3.forward * Time.deltaTime);
+            }
+           
         }
         else
         {
@@ -63,4 +68,13 @@ public class ChairGame_Player : MonoBehaviour
         }
         return targetobj;
     }
+
+    public void IsSitting(bool v)
+    {
+        if(v == true)
+        {
+            sp = false;
+        }
+    }
+
 }

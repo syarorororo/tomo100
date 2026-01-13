@@ -8,7 +8,7 @@ namespace Kouya {
         ChairsGame_ReMake ChairsGame_Remake;
         public GameObject CenterObj;
         public float rote_sp;
-
+        public bool sp = true;
         private GameObject nearobj;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
@@ -26,22 +26,47 @@ namespace Kouya {
 
         // Update is called once per frame
         void Update()
-        {
+        {           
             MovePos(false);
+        }
+        private void FixedUpdate()
+        {
+            nearobj = searchTag(gameObject, "Chair"); 
+            Debug.Log(nearobj);
         }
         public void MovePos(bool i)
         {
             if (i)
             {
-                transform.LookAt(nearobj.transform);
-                transform.Translate(Vector3.forward * Time.deltaTime);
+                if(sp == true)
+                {
+                    transform.LookAt(nearobj.transform);
+                    transform.Translate(Vector3.forward * Time.deltaTime);
+                }
+                
             }
             else
             {
                 transform.RotateAround(CenterObj.transform.position, Vector3.up, rote_sp * Time.deltaTime);
             }
         }
-
+        public void IsSitting(bool i)
+        {
+            if(i == true)
+            {
+                sp = false; 
+            }
+        }
+        /*‰¼Žc‚µ
+        private void OnCollisionEnter(Collision collision)
+        {
+            Debug.Log("“–‚½‚Á‚½‘ŠŽè:" + collision.gameObject.name);
+            if (collision.gameObject.CompareTag("Chair"))
+            {
+                sp = false;
+            }
+        }
+        */
         GameObject searchTag(GameObject nowobj, string tagname)
         {
             float tmpDis = 0;

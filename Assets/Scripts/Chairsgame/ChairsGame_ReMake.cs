@@ -9,19 +9,19 @@ public class ChairsGame_ReMake : MonoBehaviour
     /*
      椅子取りゲームで作るべきもの
     ・椅子までの移動　済
+    ・椅子をとられた反応　済
     ・回転（音楽なってるとき）済
     ・椅子を取られた時の対象の変更
     ・椅子を少なくしてゲームのリスタート 済
   　  一連をコルーチン操作でやってみる　済
-    ・リザルト
+    ・リザルト 半済　未着手：誰が残ったか
     次やること
     ・キャラの情報追加
-    ・リザルトを出す
-    ・椅子の判定追加
      */
     public bool OK = false; 
     public bool St=false;
     public bool end=false;
+    public bool check=false;
     ChairGame_Player player;
    Kouya.Chairsgame_base enemy;
     public AudioSource audiosource;
@@ -55,24 +55,37 @@ public class ChairsGame_ReMake : MonoBehaviour
     public GameObject Panel;
     [SerializeField]
     public GameObject ResultPanel;
+    [SerializeField]
+    public GameObject WaitPanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+       // SceneManager.LoadScene(1);//１は仮の番号　実装する際は実際のシーン番号に変更してください
+    }
     void Start()
     {
         Debug.Log("ChairsGame_ReMakeが読み込まれました。");
         randomPlayTIme = Random.Range(5f, 30f);//音楽を流す時間設定
         randomWaitTIme = Random.Range(0f, 2f);//待機時間設定
         centerPoint = transform.position;
+        WaitPanel.SetActive(false);
         ResultPanel.SetActive(false);
         StartCoroutine(GameMaster());
-       
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //---------------椅子の数を確認----------------------------
+        GameObject[] Chairs = GameObject.FindGameObjectsWithTag("Chair");
+        Debug.Log("椅子の数"+Chairs.Length);
+        if (Chairs.Length <= 0)
+        {
+            Debug.Log("椅子の数がなくなりました");
+            check =true;
+        }
     }
-     public void P_Know()
+     public void P_Know()//説明画面の確認ボタン用
     {
         OK = true;
         Debug.Log("説明画面が押されました");
@@ -81,7 +94,7 @@ public class ChairsGame_ReMake : MonoBehaviour
     IEnumerator GameMaster()
     {
         Debug.Log("GameMasterが読み込まれました");
-       // yield return StartCoroutine(ExpGame());
+       yield return StartCoroutine(ExpGame());
         while (CreateCount > 1)
         {
             Debug.Log("ゲームループ開始");
@@ -89,13 +102,14 @@ public class ChairsGame_ReMake : MonoBehaviour
             yield return StartCoroutine(CharaCreate());
             yield return StartCoroutine(StartGame());
             yield return StartCoroutine(MusicController());
+            yield return new WaitUntil(() => check);
             yield return StartCoroutine(ResetGame());
-             CreateCount -= 1;
-             CreateCharaCount -= 1;
+             CreateCount -= 2;
+             CreateCharaCount -= 2;
         }
+        Debug.Log("ゲームループ終了");  
         yield return new WaitUntil(() => end);
-        yield return StartCoroutine(EndedGame());
-        Debug.Log("ゲームループ終了");           
+        yield return StartCoroutine(EndedGame());                 
         yield break;
     }
     //--------------------ゲーム説明画面のコルーチン------------------
@@ -110,11 +124,14 @@ public class ChairsGame_ReMake : MonoBehaviour
     //--------------------ゲームリセットのコルーチン------------------
     IEnumerator ResetGame()
     {
+        WaitPanel.SetActive(true);
         Transform Parent_t = centobj.transform;
         for(int i = Parent_t.childCount -1;i>=0;i--)
         {
             Destroy(Parent_t.GetChild(i).gameObject);
         }
+        yield return new WaitForSeconds(5f);
+        WaitPanel.SetActive(false);
         yield break ;
     }
     //--------------------ゲーム終了のコルーチン----------------------
