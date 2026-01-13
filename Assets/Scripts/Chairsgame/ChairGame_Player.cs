@@ -1,80 +1,83 @@
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
-public class ChairGame_Player : MonoBehaviour
+namespace Kouya
 {
-    public GameObject CenterObj;
-    public float rote_sp;
-    private GameObject nearobj;
-    bool Check;
-    bool sp;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class ChairGame_Player : MonoBehaviour
     {
-       
-
-        
-    }
-    public void ClickMouse(bool i)
-    {
-        if(i == true)
+        public GameObject CenterObj;
+        public float rote_sp;
+        private GameObject nearobj;
+        bool Check;
+        bool sp;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-           if(Input.GetKey(KeyCode.Space))
+
+
+
+        }
+        public void ClickMouse(bool i)
+        {
+            if (i == true)
             {
-                nearobj = searchTag(gameObject, "Chair");
-                Check = true;
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    nearobj = searchTag(gameObject, "Chair");
+                    Check = true;
+                }
+            }
+            else
+            {
+                Check = false;
+            }
+
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            ClickMouse(true);
+            if (Check)
+            {
+                if (sp == false)
+                {
+                    transform.LookAt(nearobj.transform);
+                    transform.Translate(Vector3.forward * Time.deltaTime);
+                }
+
+            }
+            else
+            {
+                transform.RotateAround(CenterObj.transform.position, Vector3.up, rote_sp * Time.deltaTime);
             }
         }
-        else
-        {
-           Check = false;
-        }
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        ClickMouse(true);
-        if (Check)
+        GameObject searchTag(GameObject nowobj, string tagname)
         {
-            if (sp == false)
+            float tmpDis = 0;
+            float nearDis = 0;
+
+            GameObject targetobj = null;
+            foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
             {
-                transform.LookAt(nearobj.transform);
-                transform.Translate(Vector3.forward * Time.deltaTime);
+                tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
+
+                if (nearDis == 0 || nearDis > tmpDis)
+                {
+                    nearDis = tmpDis;
+                    targetobj = obs;
+                }
             }
-           
+            return targetobj;
         }
-        else
-        {
-            transform.RotateAround(CenterObj.transform.position, Vector3.up, rote_sp * Time.deltaTime);
-        }
-    }
-    
-    GameObject searchTag(GameObject nowobj, string tagname)
-    {
-        float tmpDis = 0;
-        float nearDis = 0;
 
-        GameObject targetobj = null;
-        foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
+        public void IsSitting(bool v)
         {
-            tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
-
-            if (nearDis == 0 || nearDis > tmpDis)
+            if (v == true)
             {
-                nearDis = tmpDis;
-                targetobj = obs;
+                sp = false;
             }
         }
-        return targetobj;
-    }
 
-    public void IsSitting(bool v)
-    {
-        if(v == true)
-        {
-            sp = false;
-        }
     }
-
 }
