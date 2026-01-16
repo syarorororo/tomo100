@@ -8,6 +8,7 @@ TagManager:
   - Chair
   - Center
   - usedChair
+  - Enemy
   layers:
   - Default
   - TransparentFX

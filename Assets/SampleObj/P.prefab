@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3753843461585509668}
   m_Layer: 0
   m_Name: P
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CenterObj: {fileID: 0}
   rote_sp: 5
+  sp: 1
 --- !u!114 &3753843461585509668
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -41,7 +41,7 @@ namespace Kouya
         [SerializeField]
         public float radius = 3.0f;//生成する円の半径
         [SerializeField]
-        public int CreateCharaCount = 8;//キャラを生成する数
+        public int CreateCharaCount = 9;//キャラを生成する数
         [SerializeField]
         public float C_radius = 6.0f;//生成する円の半径(キャラ)
         [SerializeField]
@@ -50,7 +50,7 @@ namespace Kouya
         Text TimerText;
         [SerializeField]
         Text ResultText;
-        float limitTime = 3;
+        float limitTime = 3f;
         [SerializeField]
         public GameObject ExpPanel;
         [SerializeField]
@@ -59,6 +59,8 @@ namespace Kouya
         public GameObject ResultPanel;
         [SerializeField]
         public GameObject WaitPanel;
+        GameObject[] enemys;
+        GameObject[] players;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
@@ -66,6 +68,7 @@ namespace Kouya
         }
         void Start()
         {
+         
             Debug.Log("ChairsGame_ReMakeが読み込まれました。");
             randomPlayTIme = Random.Range(5f, 30f);//音楽を流す時間設定
             randomWaitTIme = Random.Range(0f, 2f);//待機時間設定
@@ -80,7 +83,6 @@ namespace Kouya
         {
             //---------------椅子の数を確認----------------------------
             GameObject[] Chairs = GameObject.FindGameObjectsWithTag("Chair");
-            Debug.Log("椅子の数" + Chairs.Length);
             if (Chairs.Length <= 0)
             {
                 Debug.Log("椅子の数がなくなりました");
@@ -103,9 +105,9 @@ namespace Kouya
                 yield return StartCoroutine(CreateChair());
                 yield return StartCoroutine(CharaCreate());
                 yield return StartCoroutine(StartGame());
-                yield return StartCoroutine(MusicController());
+                yield return StartCoroutine(MusicController()); 
                 yield return new WaitUntil(() => check);
-                yield return StartCoroutine(ResetGame());
+                yield return StartCoroutine(ResetGame());           
                 CreateCount -= 2;
                 CreateCharaCount -= 2;
             }
@@ -126,6 +128,7 @@ namespace Kouya
         //--------------------ゲームリセットのコルーチン------------------
         IEnumerator ResetGame()
         {
+            Debug.Log("ResetGameが読み込まれました");
             WaitPanel.SetActive(true);
             Transform Parent_t = centobj.transform;
             for (int i = Parent_t.childCount - 1; i >= 0; i--)
@@ -151,21 +154,24 @@ namespace Kouya
         //--------------------ゲームの開始前のコルーチン------------------
         IEnumerator StartGame()
         {
+            Panel.SetActive(true);
             Debug.Log("StartGameが読み込まれました");
-
+            yield return new WaitForSeconds(5f);
             Debug.Log("ループ中");
 
             while (limitTime > 0)
             {
                 limitTime -= Time.deltaTime;
+                TimerText.text = limitTime.ToString("F0");
             }
-            // TimerText.text = limitTime.ToString("F0");
+            
             if (limitTime < 0)
             {
                 limitTime = 0;
                 St = true;
             }
             yield return new WaitUntil(() => St);
+            limitTime = 3f;
             St = false;
             Panel.SetActive(false);
             yield break;
@@ -173,15 +179,41 @@ namespace Kouya
         //--------------------音楽を流して止めるコルーチン----------------
         IEnumerator MusicController()
         {
+            enemys = GameObject.FindGameObjectsWithTag("Enemy");
             Debug.Log("MusicControllerが読み込まれました");
-            //audiosource.Play();
+            audiosource.Play();
             Debug.Log("音楽が流れ始めました。");
             yield return new WaitForSeconds(randomPlayTIme);
-            //audiosource.Stop();
+            audiosource.Stop();
             Debug.Log("音楽が止まりました。");
-            // player.ClickMouse(true);
+            /*プレイヤー用処理（デバッグ中でoff）
+            foreach(GameObject P_obj in players)
+            {
+                ChairGame_Player Cp = P_obj.GetComponent<ChairGame_Player>();
+                if (Cp != null)
+                {
+                  player.ClickMouse(true);
+                }
+                else
+                {
+                    Debug.Log("プレイヤーのスクリプトがありません");
+                }
+            }
+            */
             yield return new WaitForSeconds(randomWaitTIme);
-            // enemy.MovePos(true);
+            foreach (GameObject e_obj in enemys)
+            {
+                Chairsgame_base Cb = e_obj.GetComponent<Chairsgame_base>();
+                if (Cb != null)
+                {
+                    Cb.MovePos(true);
+                }
+                else
+                {
+                    Debug.Log("NPCのスクリプトがありません");
+                }
+            }
+            yield return new WaitUntil(()=>check);//この処理のところに椅子がないのを確認
             yield break;
         }
         //--------------------椅子を円形に生成するコルーチン--------------
