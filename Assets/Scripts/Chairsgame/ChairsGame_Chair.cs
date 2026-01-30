@@ -10,16 +10,17 @@ namespace Kouya
     {
         Kouya.Chairsgame_base c_Base;
         ChairGame_Player player;
+        public bool isSit = false;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
+            
         }
 
         // Update is called once per frame
         void Update()
         {
-            Debug.Log("椅子のタグ" + this.gameObject.tag);
+           
         }
         private void OnCollisionEnter(Collision collision)
         {
@@ -27,16 +28,16 @@ namespace Kouya
             if (collision.gameObject.CompareTag("Enemy"))
             {
                 Debug.Log("椅子がとられました");
-                this.gameObject.tag = "usedChair";
+                isSit = true;
                 c_Base.IsSitting(true);
-                Debug.Log("椅子のタグ" + this.gameObject.tag);
+                Debug.Log("椅子:" + isSit);
             }
             else if (collision.gameObject.CompareTag("Player"))
             {
                 Debug.Log("椅子をプレイヤーがとりました");
-                this.gameObject.tag = "usedChair";
+                isSit= true;   
                 player.IsSitting(true);
-                Debug.Log("椅子のタグ" + this.gameObject.tag);
+                Debug.Log("椅子:" + isSit);
             }
         }
     }

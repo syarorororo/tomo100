@@ -24,8 +24,9 @@ namespace Kouya
         public bool St = false;
         public bool end = false;
         public bool check = false;
-        ChairGame_Player player;
+        Kouya.ChairGame_Player player;
         Kouya.Chairsgame_base enemy;
+        ChairsGame_Chair CC;
         public AudioSource audiosource;
         private float randomPlayTIme;//音楽再生時間
         private float randomWaitTIme;//待機時間
@@ -34,6 +35,8 @@ namespace Kouya
         private GameObject CreateObj;//生成するオブジェクト
         [SerializeField]
         private GameObject CreateCharaObj;//生成するキャラオブジェクト
+        [SerializeField]
+        private GameObject CreatePlayerObj;//生成するプレイヤー
         [SerializeField]
         public GameObject centobj; //円の中心になるオブジェクト
         [SerializeField]
@@ -60,7 +63,7 @@ namespace Kouya
         [SerializeField]
         public GameObject WaitPanel;
         GameObject[] enemys;
-        GameObject[] players;
+        GameObject players;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
@@ -81,13 +84,17 @@ namespace Kouya
         // Update is called once per frame
         void Update()
         {
-            //---------------椅子の数を確認----------------------------
+           //---------------椅子の数を確認----------------------------
             GameObject[] Chairs = GameObject.FindGameObjectsWithTag("Chair");
-            if (Chairs.Length <= 0)
+            foreach(var c in Chairs)
             {
-                Debug.Log("椅子の数がなくなりました");
-                check = true;
+                if (!c.GetComponent<ChairsGame_Chair>().isSit)
+                {
+                    return;
+                }
+               
             }
+            check = true;
         }
         public void P_Know()//説明画面の確認ボタン用
         {
@@ -101,6 +108,7 @@ namespace Kouya
             yield return StartCoroutine(ExpGame());
             while (CreateCount > 1)
             {
+                check = false;  
                 Debug.Log("ゲームループ開始");
                 yield return StartCoroutine(CreateChair());
                 yield return StartCoroutine(CharaCreate());
@@ -129,15 +137,25 @@ namespace Kouya
         IEnumerator ResetGame()
         {
             Debug.Log("ResetGameが読み込まれました");
-            WaitPanel.SetActive(true);
-            Transform Parent_t = centobj.transform;
-            for (int i = Parent_t.childCount - 1; i >= 0; i--)
+            players = GameObject.FindGameObjectWithTag("Player");
+            if(players.GetComponent<ChairGame_Player>().sit)
             {
-                Destroy(Parent_t.GetChild(i).gameObject);
+                WaitPanel.SetActive(true);
+                Transform Parent_t = centobj.transform;
+                for (int i = Parent_t.childCount - 1; i >= 0; i--)
+                {
+                    Destroy(Parent_t.GetChild(i).gameObject);
+                }
+                yield return new WaitForSeconds(5f);
+                WaitPanel.SetActive(false);
+                yield break;
             }
-            yield return new WaitForSeconds(5f);
-            WaitPanel.SetActive(false);
-            yield break;
+            else
+            {
+                StartCoroutine(EndedGame());
+            }
+            
+           
         }
         //--------------------ゲーム終了のコルーチン----------------------
         IEnumerator EndedGame()
@@ -179,34 +197,57 @@ namespace Kouya
         //--------------------音楽を流して止めるコルーチン----------------
         IEnumerator MusicController()
         {
+            players = GameObject.FindGameObjectWithTag("Player");
             enemys = GameObject.FindGameObjectsWithTag("Enemy");
+
             Debug.Log("MusicControllerが読み込まれました");
-            audiosource.Play();
+            audiosource.Play();       
+             ChairGame_Player Cp = players.GetComponent<ChairGame_Player>();
+             if (Cp != null)
+             {
+                 Debug.Log("プレイヤーのスクリプトがあります");
+                 Cp.ClickMouse(false);
+             }
+             else
+             {
+                 Debug.Log("プレイヤーのスクリプトがありません");
+             }
+            
+            foreach (GameObject e_obj in enemys)
+            {
+                Chairsgame_base Cb = e_obj.GetComponent<Chairsgame_base>();
+                if (Cb != null)
+                {
+                    Debug.Log("NPCのスクリプトがありまス");
+                    Cb.isMoving(false);
+                }
+                else
+                {
+                    Debug.Log("NPCのスクリプトがありません");
+                }
+            }
             Debug.Log("音楽が流れ始めました。");
             yield return new WaitForSeconds(randomPlayTIme);
             audiosource.Stop();
             Debug.Log("音楽が止まりました。");
-            /*プレイヤー用処理（デバッグ中でoff）
-            foreach(GameObject P_obj in players)
-            {
-                ChairGame_Player Cp = P_obj.GetComponent<ChairGame_Player>();
-                if (Cp != null)
-                {
-                  player.ClickMouse(true);
-                }
-                else
-                {
-                    Debug.Log("プレイヤーのスクリプトがありません");
-                }
-            }
-            */
+            //プレイヤー用処理（デバッグ中でoff）
+              if (Cp != null)
+              {
+                    Debug.Log("プレイヤーのスクリプトがあります");
+                  Cp.ClickMouse(true);
+              }
+             else
+             {
+                Debug.Log("プレイヤーのスクリプトがありません");
+             }
             yield return new WaitForSeconds(randomWaitTIme);
             foreach (GameObject e_obj in enemys)
             {
                 Chairsgame_base Cb = e_obj.GetComponent<Chairsgame_base>();
                 if (Cb != null)
                 {
-                    Cb.MovePos(true);
+                    Debug.Log("NPCのスクリプトがありまス");
+                    Cb.isMoving(true);
                 }
                 else
                 {
@@ -250,6 +291,7 @@ namespace Kouya
                         obj.transform.rotation = Quaternion.LookRotation(dirFromCenter);
                     }
                 }
+
                 Debug.Log("椅子の生成が終わりました。");
             }
             else
@@ -281,10 +323,17 @@ namespace Kouya
                     var y = Mathf.Sin(repeatPoint) * C_radius;
                     */
                     var position = centerPoint + new Vector3(x, 0, y);
+                    GameObject spawneObj;
+                    if (i == 0)
+                    {
+                        spawneObj = Instantiate(CreatePlayerObj, position, Quaternion.identity, transform);
+                    }
+                    else
+                    { 
+                        spawneObj = Instantiate(CreateCharaObj, position, Quaternion.identity, transform);
+                    }
 
-                    var C_obj = Instantiate(CreateCharaObj, position, Quaternion.identity, transform);
-
-                    Vector3 dirFromCenter = (C_obj.transform.position - centerPoint).normalized;
+                    Vector3 dirFromCenter = (spawneObj.transform.position - centerPoint).normalized;
 
                     dirFromCenter.y = 0;
 

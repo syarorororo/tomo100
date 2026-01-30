@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 
 namespace Kouya {
@@ -8,8 +9,9 @@ namespace Kouya {
         ChairsGame_ReMake ChairsGame_Remake;
         public GameObject CenterObj;
         public float rote_sp;
-        public bool sp = true;
-        private GameObject nearobj;
+        public bool sp = false;
+        private GameObject[] nearobj;
+        bool m_st = false;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
@@ -26,24 +28,34 @@ namespace Kouya {
 
         // Update is called once per frame
         void Update()
-        {           
-            MovePos(false);
+        {
+            MovePos(m_st);
         }
         private void FixedUpdate()
         {
             nearobj = searchTag(gameObject, "Chair"); 
-            Debug.Log(nearobj);
+          
         }
         public void MovePos(bool i)
         {
+            if (sp)
+            {
+                return;
+            }
             if (i)
             {
-                if(sp == true)
+                GameObject value = null;
+                foreach (var g in nearobj)
                 {
-                    transform.LookAt(nearobj.transform);
-                    transform.Translate(Vector3.forward * Time.deltaTime);
+                    if (!g.GetComponent<ChairsGame_Chair>().isSit)
+                    {
+                        value = g; break;
+                    }
                 }
-                
+                if (value == null) { return; }
+                transform.LookAt(value.transform);
+                transform.Translate(Vector3.forward * Time.deltaTime);
+
             }
             else
             {
@@ -54,7 +66,18 @@ namespace Kouya {
         {
             if(i == true)
             {
-                sp = false; 
+                sp = true; 
+            }
+        }
+        public void isMoving(bool s)
+        {
+            if(s)
+            {
+                m_st = true;
+            }
+            else
+            {
+                m_st = false;
             }
         }
         /*仮残し
@@ -67,23 +90,31 @@ namespace Kouya {
             }
         }
         */
-        GameObject searchTag(GameObject nowobj, string tagname)
+        GameObject[] searchTag(GameObject nowobj, string tagname)
         {
-            float tmpDis = 0;
-            float nearDis = 0;
+           
+            var o = GameObject.FindGameObjectsWithTag(tagname);
+            // 2. 距離順に並べ替えて配列を取得（LINQ）
+            GameObject[] sortedObjects = o.OrderBy(obj => Vector3.SqrMagnitude(obj.transform.position - transform.position)) // 距離の2乗で比較（高速）
+                .ToArray();
 
-            GameObject targetobj = null;
-            foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
+            // 結果を表示（一番近いオブジェクト）
+            if (sortedObjects.Length > 0)
             {
-                tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
-
-                if (nearDis == 0 || nearDis > tmpDis)
-                {
-                    nearDis = tmpDis;
-                    targetobj = obs;
-                }
+               // Debug.Log("最も近いオブジェクト: " + sortedObjects[0].name);
             }
-            return targetobj;
+            //GameObject targetobj = null;
+            //foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
+            //{
+            //    tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
+
+            //    if (nearDis == 0 || nearDis > tmpDis)
+            //    {
+            //        nearDis = tmpDis;
+            //        targetobj = obs;
+            //    }
+            //}
+            return sortedObjects;
         }
 
     }

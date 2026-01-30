@@ -24,15 +24,14 @@ namespace Kouya
         }
         public void AudioPlay()
         {
-            audiosource.Play();
+            Debug.Log("AudioPlayÇ™ì«Ç›çûÇ‹ÇÍÇ‹ÇµÇΩ");
             Invoke("StopMusic", randomPlayTIme);
 
         }
         void StopMusic()
         {
+            Debug.Log("AudioStopÇ™ì«Ç›çûÇ‹ÇÍÇ‹ÇµÇΩ");
             audiosource.Stop();
-            chairsgame_Base.MovePos(true);
-            player.ClickMouse(true);
         }
     }
 }

@@ -1,5 +1,9 @@
+using System.ComponentModel.Design;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 namespace Kouya
 {
@@ -7,43 +11,50 @@ namespace Kouya
     {
         public GameObject CenterObj;
         public float rote_sp;
-        private GameObject nearobj;
-        bool Check;
+        private GameObject[] nearobj;
+        bool CanSpace = false;
+        bool Check = false;
         bool sp;
+        public  bool sit;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
 
 
-
+            CenterObj = transform.parent.gameObject;
+            Debug.Log("センターオブジェクト:" + CenterObj);
+            nearobj = searchTag(gameObject, "Chair");
         }
         public void ClickMouse(bool i)
         {
-            if (i == true)
-            {
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    nearobj = searchTag(gameObject, "Chair");
-                    Check = true;
-                }
-            }
-            else
-            {
-                Check = false;
-            }
-
+            CanSpace = true;
+        }
+        void OnSpace(InputValue input)
+        {
+            if (!CanSpace) { return; }
+            Check = true;
         }
         // Update is called once per frame
         void Update()
         {
-            ClickMouse(true);
+            if (sp)
+            {
+                Check = false ;
+                return;
+            }
             if (Check)
             {
-                if (sp == false)
+                GameObject value = null;
+                foreach (var g in nearobj)
                 {
-                    transform.LookAt(nearobj.transform);
-                    transform.Translate(Vector3.forward * Time.deltaTime);
+                    if (!g.GetComponent<ChairsGame_Chair>().isSit)
+                    {
+                        value = g; break;
+                    }
                 }
+                if (value == null) { return; }
+                transform.LookAt(value.transform);
+                transform.Translate(Vector3.forward * Time.deltaTime);
 
             }
             else
@@ -52,23 +63,19 @@ namespace Kouya
             }
         }
 
-        GameObject searchTag(GameObject nowobj, string tagname)
+        GameObject[] searchTag(GameObject nowobj, string tagname)
         {
-            float tmpDis = 0;
-            float nearDis = 0;
+            var o = GameObject.FindGameObjectsWithTag(tagname);
+            // 2. 距離順に並べ替えて配列を取得（LINQ）
+            GameObject[] sortedObjects = o.OrderBy(obj => Vector3.SqrMagnitude(obj.transform.position - transform.position)) // 距離の2乗で比較（高速）
+                .ToArray();
 
-            GameObject targetobj = null;
-            foreach (GameObject obs in GameObject.FindGameObjectsWithTag(tagname))
+            // 結果を表示（一番近いオブジェクト）
+            if (sortedObjects.Length > 0)
             {
-                tmpDis = Vector3.Distance(obs.transform.position, nowobj.transform.position);
-
-                if (nearDis == 0 || nearDis > tmpDis)
-                {
-                    nearDis = tmpDis;
-                    targetobj = obs;
-                }
+                Debug.Log("最も近いオブジェクト: " + sortedObjects[0].name);
             }
-            return targetobj;
+            return sortedObjects;
         }
 
         public void IsSitting(bool v)

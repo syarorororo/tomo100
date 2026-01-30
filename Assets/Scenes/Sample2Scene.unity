@@ -1133,10 +1133,11 @@ MonoBehaviour:
   centerPoint: {x: 0, y: 0, z: 0}
   CreateObj: {fileID: 6343658739988937704, guid: ee5c16a932f27cf4b903db21c02bc117, type: 3}
   CreateCharaObj: {fileID: 4066111115621220819, guid: 93b57fab6ac7d9043b6be5b443566e1d, type: 3}
+  CreatePlayerObj: {fileID: 659391227006060325, guid: 4af05e7945f1f464e85d6c19ce848a6b, type: 3}
   centobj: {fileID: 1263939774}
   CreateCount: 7
   radius: 3
-  CreateCharaCount: 8
+  CreateCharaCount: 9
   C_radius: 5
   repeat: 2
   TimerText: {fileID: 2000455918}
