@@ -12,6 +12,7 @@ namespace Kouya {
         public bool sp = false;
         private GameObject[] nearobj;
         bool m_st = false;
+        public float randomwaittime;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
@@ -19,7 +20,7 @@ namespace Kouya {
         }
         void Start()
         {
-
+            randomwaittime = Random.Range(0.5f, 2f);
             CenterObj = transform.parent.gameObject;
             Debug.Log("センターオブジェクト:" + CenterObj);
             nearobj = searchTag(gameObject, "Chair");
@@ -44,17 +45,7 @@ namespace Kouya {
             }
             if (i)
             {
-                GameObject value = null;
-                foreach (var g in nearobj)
-                {
-                    if (!g.GetComponent<ChairsGame_Chair>().isSit)
-                    {
-                        value = g; break;
-                    }
-                }
-                if (value == null) { return; }
-                transform.LookAt(value.transform);
-                transform.Translate(Vector3.forward * Time.deltaTime);
+                Invoke("movechair", randomwaittime);
 
             }
             else
@@ -79,6 +70,20 @@ namespace Kouya {
             {
                 m_st = false;
             }
+        }
+        void movechair()
+        {
+            GameObject value = null;
+            foreach (var g in nearobj)
+            {
+                if (!g.GetComponent<ChairsGame_Chair>().isSit)
+                {
+                    value = g; break;
+                }
+            }
+            if (value == null) { return; }
+            transform.LookAt(value.transform);
+            transform.Translate(Vector3.forward * Time.deltaTime);
         }
         /*仮残し
         private void OnCollisionEnter(Collision collision)

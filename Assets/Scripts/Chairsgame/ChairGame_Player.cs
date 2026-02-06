@@ -16,27 +16,37 @@ namespace Kouya
         bool Check = false;
         bool sp;
         public  bool sit;
+        public GameObject image;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
-
             CenterObj = transform.parent.gameObject;
             Debug.Log("センターオブジェクト:" + CenterObj);
-            nearobj = searchTag(gameObject, "Chair");
+           
         }
         public void ClickMouse(bool i)
         {
-            CanSpace = true;
+            if(i)
+            {
+                image.SetActive(true);
+                Debug.Log("nu");
+                CanSpace = true;
+            }
+           
         }
         void OnSpace(InputValue input)
         {
+            
+            Debug.Log("a");
             if (!CanSpace) { return; }
+            image.SetActive(false);
+            Debug.Log("b");
             Check = true;
         }
         // Update is called once per frame
         void Update()
         {
+            nearobj = searchTag(gameObject, "Chair");
             if (sp)
             {
                 Check = false ;
@@ -73,16 +83,18 @@ namespace Kouya
             // 結果を表示（一番近いオブジェクト）
             if (sortedObjects.Length > 0)
             {
-                Debug.Log("最も近いオブジェクト: " + sortedObjects[0].name);
+                //Debug.Log("最も近いオブジェクト: " + sortedObjects[0].name);
             }
             return sortedObjects;
         }
 
         public void IsSitting(bool v)
         {
-            if (v == true)
+            if (v)
             {
-                sp = false;
+                sit = true;
+               
+                sp = true;
             }
         }
 

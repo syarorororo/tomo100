@@ -64,6 +64,7 @@ namespace Kouya
         public GameObject WaitPanel;
         GameObject[] enemys;
         GameObject players;
+       public GameObject Eximage;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
         {
@@ -71,7 +72,6 @@ namespace Kouya
         }
         void Start()
         {
-         
             Debug.Log("ChairsGame_ReMakeが読み込まれました。");
             randomPlayTIme = Random.Range(5f, 30f);//音楽を流す時間設定
             randomWaitTIme = Random.Range(0f, 2f);//待機時間設定
@@ -205,6 +205,7 @@ namespace Kouya
              ChairGame_Player Cp = players.GetComponent<ChairGame_Player>();
              if (Cp != null)
              {
+                Cp.image = Eximage;
                  Debug.Log("プレイヤーのスクリプトがあります");
                  Cp.ClickMouse(false);
              }
@@ -240,7 +241,7 @@ namespace Kouya
              {
                 Debug.Log("プレイヤーのスクリプトがありません");
              }
-            yield return new WaitForSeconds(randomWaitTIme);
+         //   yield return new WaitForSeconds(randomWaitTIme);
             foreach (GameObject e_obj in enemys)
             {
                 Chairsgame_base Cb = e_obj.GetComponent<Chairsgame_base>();
